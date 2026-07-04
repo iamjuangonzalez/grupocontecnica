@@ -1,26 +1,231 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ *
+ * Design tokens (raw HSL triplets + shadows + gradients)
+ * ------------------------------------------------------------------ */
 :root {
-	--background: #ffffff;
-	--foreground: #171717;
+	--background: 0 0% 100%;
+	--foreground: 222 47% 11%;
+
+	--card: 0 0% 100%;
+	--card-foreground: 222 47% 11%;
+
+	--popover: 0 0% 100%;
+	--popover-foreground: 222 47% 11%;
+
+	--primary: 215 65% 23%;
+	--primary-foreground: 0 0% 100%;
+
+	--secondary: 210 40% 96%;
+	--secondary-foreground: 215 55% 20%;
+
+	--muted: 210 40% 96%;
+	--muted-foreground: 215 20% 55%;
+
+	--accent: 210 80% 50%;
+	--accent-foreground: 0 0% 100%;
+
+	--destructive: 0 84.2% 60.2%;
+	--destructive-foreground: 0 0% 100%;
+
+	--border: 214 32% 91%;
+	--input: 214 32% 91%;
+	--ring: 210 80% 50%;
+
+	--radius: 0.75rem;
+
+	/* Brand */
+	--navy: 215 65% 23%;
+	--navy-mid: 215 58% 30%;
+	--navy-light: 215 50% 40%;
+	--navy-pale: 215 40% 55%;
+	--blue-bright: 210 80% 50%;
+	--blue-light: 210 70% 65%;
+	--blue-pale: 210 80% 95%;
+	--off-white: 210 40% 98%;
+	--gray-light: 214 32% 95%;
+	--gray-text: 215 15% 50%;
+
+	/* Shadows */
+	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.05);
+
+	/* Gradients */
+	--gradient-hero: linear-gradient(160deg, hsl(215 65% 15% / 0.9) 0%, hsl(215 60% 25% / 0.7) 60%, hsl(210 80% 30% / 0.45) 100%);
+	--gradient-navy: linear-gradient(135deg, hsl(215 65% 23%), hsl(215 50% 35%));
+	--gradient-blue: linear-gradient(135deg, hsl(210 80% 45%), hsl(210 70% 60%));
+	--gradient-cta: linear-gradient(135deg, hsl(215 65% 23%), hsl(215 55% 30%));
+	--gradient-subtle: linear-gradient(180deg, hsl(210 40% 98%) 0%, hsl(0 0% 100%) 100%);
 }
 
+/* ------------------------------------------------------------------ *
+ * Tailwind v4 theme mapping — generates bg-*, text-*, border-*, etc.
+ * ------------------------------------------------------------------ */
 @theme inline {
-	--color-background: var(--background);
-	--color-foreground: var(--foreground);
-	--font-sans: var(--font-geist-sans);
-	--font-mono: var(--font-geist-mono);
+	--color-background: hsl(var(--background));
+	--color-foreground: hsl(var(--foreground));
+	--color-card: hsl(var(--card));
+	--color-card-foreground: hsl(var(--card-foreground));
+	--color-popover: hsl(var(--popover));
+	--color-popover-foreground: hsl(var(--popover-foreground));
+	--color-primary: hsl(var(--primary));
+	--color-primary-foreground: hsl(var(--primary-foreground));
+	--color-secondary: hsl(var(--secondary));
+	--color-secondary-foreground: hsl(var(--secondary-foreground));
+	--color-muted: hsl(var(--muted));
+	--color-muted-foreground: hsl(var(--muted-foreground));
+	--color-accent: hsl(var(--accent));
+	--color-accent-foreground: hsl(var(--accent-foreground));
+	--color-destructive: hsl(var(--destructive));
+	--color-destructive-foreground: hsl(var(--destructive-foreground));
+	--color-border: hsl(var(--border));
+	--color-input: hsl(var(--input));
+	--color-ring: hsl(var(--ring));
+
+	/* Brand */
+	--color-navy: hsl(var(--navy));
+	--color-navy-mid: hsl(var(--navy-mid));
+	--color-navy-light: hsl(var(--navy-light));
+	--color-navy-pale: hsl(var(--navy-pale));
+	--color-blue-brand: hsl(var(--blue-bright));
+	--color-blue-light: hsl(var(--blue-light));
+	--color-blue-pale: hsl(var(--blue-pale));
+	--color-off-white: hsl(var(--off-white));
+	--color-gray-light: hsl(var(--gray-light));
+	--color-gray-brand: hsl(var(--gray-text));
+
+	/* Fonts (variables injected from layout.tsx) */
+	--font-sans: var(--font-inter), sans-serif;
+	--font-body: var(--font-inter), sans-serif;
+	--font-display: var(--font-plus-jakarta), sans-serif;
+
+	/* Radius */
+	--radius-lg: var(--radius);
+	--radius-md: calc(var(--radius) - 2px);
+	--radius-sm: calc(var(--radius) - 4px);
+
+	/* Shadows → shadow-navy / shadow-card / shadow-deep */
+	--shadow-navy: 0 4px 14px 0 hsl(215 65% 23% / 0.25);
+	--shadow-card: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.07);
+	--shadow-deep: 0 20px 25px -5px rgb(0 0 0 / 0.08), 0 8px 10px -6px rgb(0 0 0 / 0.05);
 }
 
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: #0a0a0a;
-		--foreground: #ededed;
+/* Centered, padded container capped at 1400px */
+@utility container {
+	margin-inline: auto;
+	padding-inline: 2rem;
+	max-width: 1400px;
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+@layer base {
+	* {
+		border-color: hsl(var(--border));
+	}
+	html {
+		scroll-behavior: smooth;
+	}
+	body {
+		background: hsl(var(--background));
+		color: hsl(var(--foreground));
+		font-family: var(--font-inter), sans-serif;
+		font-size: 16px;
+		line-height: 1.6;
+		-webkit-font-smoothing: antialiased;
+	}
+	h1, h2, h3, h4, h5, h6 {
+		font-family: var(--font-plus-jakarta), sans-serif;
+		font-weight: 700;
+		line-height: 1.2;
+		letter-spacing: -0.02em;
 	}
 }
 
-body {
-	background: var(--background);
-	color: var(--foreground);
-	font-family: Arial, Helvetica, sans-serif;
+/* ------------------------------------------------------------------ *
+ * Brand utilities (not expressible as theme tokens)
+ * ------------------------------------------------------------------ */
+.gradient-hero { background: var(--gradient-hero); }
+.gradient-navy { background: var(--gradient-navy); }
+.gradient-blue { background: var(--gradient-blue); }
+.gradient-cta { background: var(--gradient-cta); }
+.gradient-subtle { background: var(--gradient-subtle); }
+
+/* Blue accent line */
+.blue-line {
+	display: inline-block;
+	width: 32px;
+	height: 3px;
+	background: hsl(var(--blue-bright));
+	border-radius: 99px;
+}
+
+/* Section badge */
+.section-badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.25rem 0.875rem;
+	background: hsl(var(--blue-pale));
+	color: hsl(var(--blue-bright));
+	border-radius: 99px;
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	font-family: var(--font-inter), sans-serif;
+}
+
+/* Nav link underline effect */
+.nav-link-underline {
+	position: relative;
+}
+.nav-link-underline::after {
+	content: "";
+	position: absolute;
+	bottom: -3px;
+	left: 0;
+	width: 0;
+	height: 2px;
+	background: hsl(var(--blue-bright));
+	border-radius: 99px;
+	transition: width 0.25s ease;
+}
+.nav-link-underline:hover::after {
+	width: 100%;
+}
+
+/* Card hover lift */
+.card-lift {
+	transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card-lift:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--shadow-xl);
+}
+
+/* Scroll-reveal animations */
+@keyframes fadeInUp {
+	from { opacity: 0; transform: translateY(24px); }
+	to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+.animate-fade-in-up { animation: fadeInUp 0.6s ease both; }
+.animate-fade-in { animation: fadeIn 0.5s ease both; }
+.delay-100 { animation-delay: 0.1s; }
+.delay-200 { animation-delay: 0.2s; }
+.delay-300 { animation-delay: 0.3s; }
+.delay-400 { animation-delay: 0.4s; }
+
+/* Respect reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+	*, *::before, *::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
 }
