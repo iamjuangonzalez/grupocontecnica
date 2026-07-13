@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Building2, Warehouse, Milestone } from "lucide-react";
+import Link from "next/link";
+import { Building2, Warehouse, Milestone, ArrowRight } from "lucide-react";
 
 const proyectos = [
   {
@@ -115,6 +116,16 @@ const ProjectsSection = () => {
               </div>
             );
           })}
+        </div>
+
+        {/* CTA a portafolio completo */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/proyectos"
+            className="inline-flex items-center gap-2 rounded-lg bg-navy px-6 py-3 font-body text-sm font-semibold text-white transition-all duration-200 hover:bg-navy-mid hover:gap-3 shadow-navy"
+          >
+            Ver proyectos ejecutados <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
     </section>

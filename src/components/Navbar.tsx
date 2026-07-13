@@ -23,7 +23,10 @@ const Navbar = () => {
 
   const scrollTo = (id: string) => {
     setMenuOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const el = document.getElementById(id);
+    // ponytail: si la sección no está en esta página (ej. /proyectos), navega al landing con hash.
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+    else window.location.href = `/#${id}`;
   };
 
   return (
