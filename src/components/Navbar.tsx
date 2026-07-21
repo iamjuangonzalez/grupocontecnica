@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
@@ -37,24 +38,15 @@ const Navbar = () => {
     }`}>
       <div className="container mx-auto flex items-center justify-between h-16">
         {/* Logo */}
-        <button onClick={() => scrollTo("inicio")} className="flex items-center gap-2.5">
-          <div className={`w-9 h-9 rounded-lg flex items-center justify-center font-display font-extrabold text-sm transition-colors ${
-            isScrolled ? "bg-blue-brand text-white" : "bg-navy text-white"
-          }`}>
-            G
-          </div>
-          <div className="leading-tight text-left">
-            <div className={`font-display font-bold text-xs tracking-widest uppercase transition-colors ${
-              isScrolled ? "text-white/80" : "text-gray-brand"
-            }`}>
-              Grupo
-            </div>
-            <div className={`font-display font-extrabold text-sm tracking-wide transition-colors ${
-              isScrolled ? "text-white" : "text-navy"
-            }`}>
-              Contécnica
-            </div>
-          </div>
+        <button onClick={() => scrollTo("inicio")} className="flex items-center">
+          <Image
+            src={isScrolled ? "/logo_w.png" : "/logo.jpeg"}
+            alt="Grupo Contécnica"
+            width={700}
+            height={399}
+            priority
+            className="h-12 w-auto"
+          />
         </button>
 
         {/* Desktop links */}

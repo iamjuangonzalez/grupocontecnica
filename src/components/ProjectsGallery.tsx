@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { ChevronLeft, ChevronRight, X, Ruler, Building2, MapPin, Layers, Maximize2 } from "lucide-react";
 
 type Proyecto = {
@@ -25,6 +25,16 @@ const proyectos: Proyecto[] = [
     descripcion:
       "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gerencia integral e interventoría técnica de la construcción del complejo hotelero, garantizando el cumplimiento de estándares internacionales de calidad, presupuesto y cronograma. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.",
     imagenes: Array.from({ length: 8 }, (_, i) => `/proyectos/hotel-four-points/${i + 1}.webp`),
+  },
+  {
+    titulo: "Berbice Cricket Stadium",
+    area: "36.612 m²",
+    cliente: "Caribbean Green Construction Inc.",
+    sector: "Deportivo",
+    ubicacion: "Palmyra Berbice, Guyana",
+    descripcion:
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Gerencia integral e interventoría técnica de la construcción del estadio de cricket, garantizando el cumplimiento de estándares internacionales de calidad, presupuesto y cronograma. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum.",
+    imagenes: Array.from({ length: 5 }, (_, i) => `/proyectos/berbice-cricket/${i + 1}.webp`),
   },
   // ponytail: placeholders — reemplazar imágenes y datos cuando lleguen los otros proyectos.
   {
@@ -56,6 +66,16 @@ function ProjectBlock({ proyecto, first }: { proyecto: Proyecto; first: boolean 
     [imgs.length]
   );
 
+  // Swipe en móvil (carrusel y lightbox)
+  const touchX = useRef(0);
+  const swipe = {
+    onTouchStart: (e: React.TouchEvent) => (touchX.current = e.touches[0].clientX),
+    onTouchEnd: (e: React.TouchEvent) => {
+      const dx = e.changedTouches[0].clientX - touchX.current;
+      if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1);
+    },
+  };
+
   useEffect(() => {
     if (!lightbox) return;
     const onKey = (e: KeyboardEvent) => {
@@ -80,8 +100,12 @@ function ProjectBlock({ proyecto, first }: { proyecto: Proyecto; first: boolean 
         </h2>
       </div>
 
+      {/* Imágenes a la izquierda, card de datos a la derecha */}
+      <div className="grid gap-8 lg:grid-cols-3 items-start">
+        {/* min-w-0: sin esto la fila de miniaturas ensancha la columna y rompe el carrusel */}
+        <div className="min-w-0 lg:col-span-2">
       {/* Carrusel */}
-      <div className="group relative aspect-video w-full overflow-hidden rounded-2xl bg-secondary shadow-deep">
+      <div {...swipe} className="group relative aspect-video w-full overflow-hidden rounded-2xl bg-secondary shadow-deep">
         <button
           onClick={() => setLightbox(true)}
           className="absolute inset-0 z-10 cursor-zoom-in"
@@ -99,14 +123,14 @@ function ProjectBlock({ proyecto, first }: { proyecto: Proyecto; first: boolean 
         {/* Flechas */}
         <button
           onClick={() => go(-1)}
-          className="absolute left-3 top-1/2 z-20 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-navy/70 text-white backdrop-blur transition hover:bg-navy"
+          className="absolute left-2 md:left-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 md:h-11 md:w-11 items-center justify-center rounded-full bg-navy/70 text-white backdrop-blur transition hover:bg-navy"
           aria-label="Imagen anterior"
         >
           <ChevronLeft size={22} />
         </button>
         <button
           onClick={() => go(1)}
-          className="absolute right-3 top-1/2 z-20 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-navy/70 text-white backdrop-blur transition hover:bg-navy"
+          className="absolute right-2 md:right-3 top-1/2 z-20 -translate-y-1/2 flex h-9 w-9 md:h-11 md:w-11 items-center justify-center rounded-full bg-navy/70 text-white backdrop-blur transition hover:bg-navy"
           aria-label="Imagen siguiente"
         >
           <ChevronRight size={22} />
@@ -119,7 +143,7 @@ function ProjectBlock({ proyecto, first }: { proyecto: Proyecto; first: boolean 
       </div>
 
       {/* Miniaturas */}
-      <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+      <div className="mt-3 flex gap-2 overflow-x-auto p-px pb-2">
         {imgs.map((src, i) => (
           <button
             key={src + i}
@@ -133,12 +157,9 @@ function ProjectBlock({ proyecto, first }: { proyecto: Proyecto; first: boolean 
           </button>
         ))}
       </div>
-
-      {/* Metadata + descripción */}
-      <div className="mt-8 grid gap-8 md:grid-cols-3">
-        <div className="md:col-span-2">
-          <p className="font-body text-muted-foreground leading-relaxed">{proyecto.descripcion}</p>
         </div>
+
+        {/* Card de datos */}
         <div className="rounded-2xl border border-border bg-secondary/50 p-6">
           <ul className="space-y-4">
             {meta.map(({ icon: Icon, label, key }) => (
@@ -155,6 +176,9 @@ function ProjectBlock({ proyecto, first }: { proyecto: Proyecto; first: boolean 
           </ul>
         </div>
       </div>
+
+      {/* Descripción */}
+      <p className="mt-8 font-body text-muted-foreground leading-relaxed">{proyecto.descripcion}</p>
 
       {/* Lightbox */}
       {lightbox && (

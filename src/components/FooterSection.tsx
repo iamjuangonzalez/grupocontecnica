@@ -51,14 +51,14 @@ const FooterSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 mb-10">
           {/* Brand */}
           <div className="md:col-span-2">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-9 h-9 rounded-lg bg-blue-brand flex items-center justify-center font-display font-extrabold text-sm text-white">
-                G
-              </div>
-              <div className="leading-tight">
-                <div className="font-display font-semibold text-xs tracking-widest text-white/60 uppercase">Grupo</div>
-                <div className="font-display font-extrabold text-sm tracking-wide text-white">Contécnica</div>
-              </div>
+            <div className="mb-4">
+              <Image
+                src="/logo_w.png"
+                alt="Grupo Contécnica"
+                width={696}
+                height={359}
+                className="h-14 w-auto brightness-0 invert"
+              />
             </div>
             <p className="font-body text-white/65 text-sm leading-relaxed max-w-xs mb-5">
               Gerencia e Interventoría de Proyectos de construcción en Colombia. Soluciones estratégicas, resultados reales.
