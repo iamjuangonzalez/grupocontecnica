@@ -45,7 +45,7 @@ const Navbar = () => {
             width={700}
             height={399}
             priority
-            className="h-12 w-auto"
+            className={`h-12 w-auto ${isScrolled ? "brightness-0 invert" : ""}`}
           />
         </button>
 
